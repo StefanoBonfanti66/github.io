@@ -242,7 +242,7 @@
 
                 <div class="form-group">
                     <label for="azienda">Azienda</label>
-                    <input type="text" id="azienda" placeholder="Nome Azienda">
+                    <input type="text" id="azienda" value="Vetronaviglio S.r.l." readonly style="background-color: #f0f8ff; color: #2c3e50; font-weight: 600;">
                 </div>
 
                 <div class="form-group">
@@ -251,23 +251,29 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="telefono">Telefono <span class="required">*</span></label>
-                    <input type="tel" id="telefono" placeholder="+39 123 456 7890" required>
+                    <label for="telefono">Telefono Aziendale</label>
+                    <input type="tel" id="telefono" value="+39 02 90364184" readonly style="background-color: #f0f8ff; color: #2c3e50; font-weight: 600;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefonoPersonale">Telefono Personale</label>
+                    <input type="tel" id="telefonoPersonale" placeholder="+39 123 456 7890">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" placeholder="mario.rossi@azienda.com" required>
+                    <input type="email" id="email" placeholder="nome.cognome@vetronaviglio.it" required>
                 </div>
 
                 <div class="form-group">
                     <label for="sito">Sito Web</label>
-                    <input type="url" id="sito" placeholder="https://www.azienda.com">
+                    <input type="url" id="sito" value="www.vetronaviglio.it" readonly style="background-color: #f0f8ff; color: #2c3e50; font-weight: 600;">
                 </div>
 
                 <div class="form-group">
                     <label for="indirizzo">Indirizzo</label>
-                    <textarea id="indirizzo" placeholder="Via Roma 123, 20100 Milano MI"></textarea>
+                    <textarea id="indirizzo" readonly style="background-color: #f0f8ff; color: #2c3e50; font-weight: 600;">Via Don Severino Fracassi 31/39
+20008 Bareggio (MI) ITALIA</textarea>
                 </div>
 
                 <div class="button-group">
@@ -305,13 +311,14 @@
             const azienda = document.getElementById('azienda').value.trim();
             const ruolo = document.getElementById('ruolo').value.trim();
             const telefono = document.getElementById('telefono').value.trim();
+            const telefonoPersonale = document.getElementById('telefonoPersonale').value.trim();
             const email = document.getElementById('email').value.trim();
             const sito = document.getElementById('sito').value.trim();
             const indirizzo = document.getElementById('indirizzo').value.trim();
 
             // Validazione campi obbligatori
-            if (!nome || !telefono || !email) {
-                alert('⚠️ Compila almeno i campi Nome, Telefono ed Email');
+            if (!nome || !email) {
+                alert('⚠️ Compila almeno i campi Nome ed Email');
                 return;
             }
 
@@ -328,7 +335,11 @@
                 vcard += `TITLE:${ruolo}\n`;
             }
             
-            vcard += `TEL:${telefono}\n`;
+            vcard += `TEL;TYPE=WORK:${telefono}\n`;
+            
+            if (telefonoPersonale) {
+                vcard += `TEL;TYPE=CELL:${telefonoPersonale}\n`;
+            }
             vcard += `EMAIL:${email}\n`;
             
             if (sito) {
@@ -411,14 +422,11 @@
         }
 
         function pulisciCampi() {
-            if (confirm('🗑️ Sei sicuro di voler cancellare tutti i campi?')) {
+            if (confirm('🗑️ Sei sicuro di voler cancellare i campi modificabili?')) {
                 document.getElementById('nome').value = '';
-                document.getElementById('azienda').value = '';
                 document.getElementById('ruolo').value = '';
-                document.getElementById('telefono').value = '';
+                document.getElementById('telefonoPersonale').value = '';
                 document.getElementById('email').value = '';
-                document.getElementById('sito').value = '';
-                document.getElementById('indirizzo').value = '';
                 
                 document.getElementById('qrcode').innerHTML = 'Compila i campi e clicca "Genera QR" per vedere il codice';
                 document.getElementById('preview').style.display = 'none';
